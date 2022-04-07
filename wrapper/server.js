@@ -14,6 +14,8 @@ const chs = require('./character/save');
 const chu = require('./character/upload');
 const stl = require('./static/load');
 const stp = require('./static/page');
+const sts = require('./starter/save');
+const stt = require('./starter/thmb');
 const mvl = require('./movie/load');
 const mvL = require('./movie/list');
 const mvm = require('./movie/meta');
@@ -50,6 +52,8 @@ const functions = [
 	tsv,
 	tsl,
 	evt,
+	sts,
+	stt,
 ];
 
 // Creates an HTTP server
