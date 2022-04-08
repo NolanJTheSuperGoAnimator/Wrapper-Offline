@@ -19,7 +19,6 @@ module.exports = {
 			const thumbFile = fUtil.getFileIndex('starter-', '.png', sId);
 			fs.writeFileSync(thumbFile, thumb);
 			var writeStream = fs.createWriteStream(path);
-			var assetBuffers = caché.loadTable(sId);
 			parse.unpackZip(zip, thumb).then(data => {
 				writeStream.write(data, () => {
 					writeStream.close();
