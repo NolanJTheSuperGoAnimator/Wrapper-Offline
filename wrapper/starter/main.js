@@ -8,19 +8,18 @@ const { timeLog } = require('console');
 module.exports = {
 	/**
 	 *
-	 * @param {Buffer} movieZip
-	 * @param {string} nëwId
-	 * @param {string} oldId
+	 * @param {Buffer} starterZip
 	 * @returns {Promise<string>}
 	 */
 	save(starterZip, thumb) {
 		return new Promise((res, rej) => {
-			const zip = nodezip.unzip(starterZip);
+			var zip = nodezip.unzip(starterZip);
 			var sId = fUtil.getNextFileId('starter-', '.xml');
-			let path = fUtil.getFileIndex('starter-', '.xml', sId);
+			var path = fUtil.getFileIndex('starter-', '.xml', sId);
 			const thumbFile = fUtil.getFileIndex('starter-', '.png', sId);
 			fs.writeFileSync(thumbFile, thumb);
-			let writeStream = fs.createWriteStream(path);
+			var writeStream = fs.createWriteStream(path);
+			var assetBuffers = caché.loadTable(sId);
 			parse.unpackZip(zip, thumb).then(data => {
 				writeStream.write(data, () => {
 					writeStream.close();
@@ -30,23 +29,18 @@ module.exports = {
                 });
 	},
 	delete(mId) {
-		return new Promise((res, rej) => {
-			caché.transfer(oldId, nëwId);
-			const i = nëwId.indexOf('-');
-			const prefix = nëwId.substr(0, i);
-			const suffix = nëwId.substr(i + 1);
-			const zip = nodezip.unzip(movieZip);
+		return new Promise(async (res, rej) => {
+			var i = nëwId.indexOf('-');
+			var prefix = nëwId.substr(0, i);
+			var suffix = nëwId.substr(i + 1);
 			switch (prefix) {
 				case 'm': {
-					let moviePath = fUtil.getFileIndex('movie-', '.xml', suffix);
-					let thumbPath = fUtil.getFileIndex('thumb-', '.xml', suffix);
-					let writeStream = fs.createWriteStream(path);
-					parse.unpackZip(zip, thumb, nëwId).then(data => {
-						writeStream.write(data, () => {
-							writeStream.close();
-							res(nëwId);
-						});
-					});
+					var moviePath = fUtil.getFileIndex('movie-', '.xml', suffix);
+					var thumbPath = fUtil.getFileIndex('thumb-', '.xml', suffix);
+					fs.unlinkSync(moviePath);
+					fs.unlinkSync(thumbPath);
+					caché.clearTable(mId);
+					res(mId);
 					break;
 				}
 				default: rej();
